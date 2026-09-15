@@ -117,6 +117,12 @@ This project uses **Dedoc Scramble** to automatically generate OpenAPI documenta
 
 Once your local server is running, you can view the interactive documentation by visiting: `/docs/api`
 
+### example user
+
+```text
+email: test@example.com
+pass: Test123!
+```
 
 ---
 
