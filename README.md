@@ -1,58 +1,117 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# JuiceBox Dev Test 
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Simple IMPL Laravel 13, Sanctum Auth, Post API, OpenWeatherMap Service API and Queue Job 
 
-## About Laravel
+---
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## Getting Started
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+### Prerequisites
+Ensure you have the following installed on your system:
+* **PHP >= 8.3**
+* **Composer**
+* **MySQL** or any preferred relational database
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+### Installation Steps
 
-## Learning Laravel
+1. **Clone the repository** and navigate to the project directory:
+   ```bash
+   git clone https://github.com/ikhwanudin/juicebox_dev_test
+   cd <project-folder>
+   ```
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+2. **Install dependencies**:
+   ```bash
+   composer install
+   ```
 
-In addition, [Laracasts](https://laracasts.com) contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+3. **Environment Setup**:
+   Copy the example environment file and generate your application key:
+   ```bash
+   cp .env.example .env
+   php artisan key:generate
+   ```
 
-You can also watch bite-sized lessons with real-world projects on [Laravel Learn](https://laravel.com/learn), where you will be guided through building a Laravel application from scratch while learning PHP fundamentals.
+4. **Database Configuration**:
+   Open your `.env` file and update your database credentials:
+   ```env
+   DB_CONNECTION=mysql
+   DB_HOST=127.0.0.1
+   DB_PORT=3306
+   DB_DATABASE=your_database_name
+   DB_USERNAME=your_database_user
+   DB_PASSWORD=your_database_password
+   ```
 
-## Agentic Development
+---
 
-Laravel's predictable structure and conventions make it ideal for AI coding agents like Claude Code, Cursor, and GitHub Copilot. Install [Laravel Boost](https://laravel.com/docs/ai) to supercharge your AI workflow:
+## Database Migrations & Seeding
+
+To set up your database schema and populate it with initial or dummy data, run the combined migration and seed command:
 
 ```bash
-composer require laravel/boost --dev
-
-php artisan boost:install
+php artisan migrate --seed
 ```
 
-Boost provides your agent 15+ tools and skills that help agents build Laravel applications while following best practices.
+### Useful Commands:
+* **Run migrations only**: `php artisan migrate`
+* **Fresh reinstall** (drops all tables and re-runs all migrations + seeds):
+  ```bash
+  php artisan migrate:fresh --seed
+  ```
 
-## Contributing
+---
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+## Development Configuration (Queues, Cache, & Email)
 
-## Code of Conduct
+For ease of local development, this project utilizes local database tables and log files instead of requiring external services like Redis or Mailgun.
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+Ensure your `.env` file reflects the following settings:
 
-## Security Vulnerabilities
+```env
+QUEUE_CONNECTION=database
+CACHE_STORE=database
+MAIL_MAILER=log
+```
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+### 1. Queue Configuration (`database`)
+* **How it works:** Instead of sending asynchronous jobs (like sending emails or processing files) to a third-party service, Laravel stores the jobs inside a `jobs` table in your MySQL database.
+* **Why use it:** Eliminates the need to install Redis or Beanstalkd locally.
 
-## License
+### 2. Cache Configuration (`database`)
+* **How it works:** Application cache data and session data are stored directly inside the `cache` and `cache_locks` tables in your database.
+* **Why use it:** Highly visible, easy to clear, and requires zero external infrastructure tools to test caching logic.
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+### 3. Email Driver (`log`)
+* **How it works:** The application will **not** send real emails to recipients. Instead, the full content of any outgoing email (including headers and HTML body) is written directly into your local log file.
+* **Where to find them:** Open `storage/logs/laravel.log` to view your simulated emails.
+
+---
+
+## Running the Application
+
+### 1. Start the Local Server
+```bash
+php artisan serve
+```
+
+### 2. Run the Queue Worker
+Because the queue is set to `database`, jobs will sit in the database until a worker processes them. Run this command in a separate terminal window to process background jobs:
+
+```bash
+php artisan queue:work
+```
+
+### 3. Access API Documentation
+This project uses **Dedoc Scramble** to automatically generate OpenAPI documentation for your API endpoints.
+
+Once your local server is running, you can view the interactive documentation by visiting: `/docs/api`
+
+
+---
+
+## Utility Commands
+
+* **Clear Application Cache**: `php artisan cache:clear`
+* **Clear Config Cache**: `php artisan config:clear`
+* **Clear Route Cache**: `php artisan route:clear`
