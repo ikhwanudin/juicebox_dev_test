@@ -11,6 +11,7 @@ use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Http\Response;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
 
 class PostController extends Controller
 {
@@ -65,6 +66,8 @@ class PostController extends Controller
     #[PathParameter('post', description: 'post id', type: 'string', format: 'ulid', example: '01m2g2903m4pm5v4s2ef1ywgeb')]
     public function update(PostRequest $request, Post $post)
     {
+        Gate::authorize('update', $post);
+
         $post->update($request->toArray());
         return new PostResource($post);
     }
@@ -78,6 +81,8 @@ class PostController extends Controller
     #[PathParameter('post', description: 'post id', type: 'string', format: 'ulid', example: '01m2g2903m4pm5v4s2ef1ywgeb')]
     public function destroy(Post $post): JsonResponse
     {
+        Gate::authorize('delete', $post);
+
         try{
             $post->delete();
             return response()->json(null, Response::HTTP_NO_CONTENT);
