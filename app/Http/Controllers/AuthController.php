@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Resources\AuthResource;
+use App\Jobs\SendWelcomeEmail;
 use Dedoc\Scramble\Attributes\PathParameter;
 use Illuminate\Http\Request;
 use App\Models\User;
@@ -32,6 +32,10 @@ class AuthController extends Controller
             'email' => $validatedData['email'],
             'password' => Hash::make($validatedData['password']),
         ]);
+
+        //send email using queued job
+        SendWelcomeEmail::dispatch($user);
+
 
         $token = $user->createToken('auth_token')->plainTextToken;
 
