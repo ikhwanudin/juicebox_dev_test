@@ -7,8 +7,10 @@ use App\Http\Resources\PostResource;
 use App\Models\Post;
 use Dedoc\Scramble\Attributes\PathParameter;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Http\Response;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class PostController extends Controller
 {
@@ -16,10 +18,10 @@ class PostController extends Controller
      * Get all posts.
      *
      * @param Request $request
-     * @return PostResource
+     * @return AnonymousResourceCollection
      */
     #[PathParameter('pageSize', description: 'query parameter used in offset-based pagination', required: false, type: 'string', default: 15)]
-    public function index(Request $request): PostResource
+    public function index(Request $request): AnonymousResourceCollection
     {
         return PostResource::collection(
             Post::paginate($request->pageSize ?? 15)

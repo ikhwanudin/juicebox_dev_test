@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('slug');
             $table->string('title');
             $table->text('body');
+            $table->foreignUlidFor(\App\Models\User::class);
             $table->timestamps();
         });
     }
