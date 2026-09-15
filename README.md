@@ -8,9 +8,9 @@ Simple IMPL Laravel 13, Sanctum Auth, Post API, OpenWeatherMap Service API and Q
 
 ### Prerequisites
 Ensure you have the following installed on your system:
-* **PHP >= 8.3**
-* **Composer**
-* **MySQL** or any preferred relational database
+* **PHP**  >= 8.3
+* **Composer** 2.x 
+* **MySQL** 8.0+
 
 ### Installation Steps
 
@@ -72,6 +72,7 @@ Ensure your `.env` file reflects the following settings:
 QUEUE_CONNECTION=database
 CACHE_STORE=database
 MAIL_MAILER=log
+OWM_KEY=your_api_key_here
 ```
 
 ### 1. Queue Configuration (`database`)
@@ -85,6 +86,15 @@ MAIL_MAILER=log
 ### 3. Email Driver (`log`)
 * **How it works:** The application will **not** send real emails to recipients. Instead, the full content of any outgoing email (including headers and HTML body) is written directly into your local log file.
 * **Where to find them:** Open `storage/logs/laravel.log` to view your simulated emails.
+
+### 4. OpenWeatherMap Setup
+
+This application connects to the OpenWeatherMap API for weather data.
+
+#### Get API Key
+1. Register an account at [OpenWeatherMap Sign Up](https://home.openweathermap.org/users/sign_up).
+2. Go to your [API Keys Dashboard](https://home.openweathermap.org/api_keys).
+3. Copy your generated API Key *(Note: New keys can take up to 2 hours to activate)*.
 
 ---
 
